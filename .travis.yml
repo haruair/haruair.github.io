@@ -23,4 +23,5 @@ script:
   - hugo
 after_success:
   - echo "haruair.github.io" > ./public/CNAME
+  - chmod a+x ./scripts/deploy.sh
   - ./scripts/deploy.sh
