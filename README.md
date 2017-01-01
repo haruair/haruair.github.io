@@ -8,7 +8,7 @@ Up and running in a few types.
 
 ```
 $ brew update && brew install hugo
-$ git clone https://github.com/haruair/haruair.github.io.git
+$ git clone https://github.com/haruair/haruair.github.io.git --recursive
 $ cd haruair.github.io
 $ git checkout -b code
 $ hugo server -w
