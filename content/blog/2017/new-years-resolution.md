@@ -5,14 +5,14 @@ date = "2017-01-01T14:08:01+11:00"
 
 +++
 
-I'd love to make a list. New year's reoslution is the one of the thing, I almost
+I'd love to make a list. New year's resolution is one of the things, I almost
 forget at the end of the year, though. I want to list some ideas for 2017:
 
 - Keep writing a blog as much as I did last year. But the difference is that the
 posts will be written by English.
 - Read more. When I read something, it still very slow. Probably I will grab
 Kindle again, want to spend more time with the text.
-- Do coding. I didn't do anything with open source in last year becuase of the
+- Do coding. I didn't do anything with open source in last year because of the
 translation. I want to make something.
 
 This list is the three big things in this year. Will see what I can achieve at
@@ -31,4 +31,3 @@ study intensively. My expectation of this year is studying like a
 
 Practice makes perfect. Everyone knows that, most of people doesn't do that.
 I will make it for the perfection with this resolution in this year.
-
