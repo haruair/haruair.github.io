@@ -1,6 +1,6 @@
 # [haruair.github.io](https://haruair.github.io)
 
-[Hugo](https://gohugo.io) based static blog repository.
+A static blog repository based [Hugo](https://gohugo.io). 
 
 ## A Few Tips
 
