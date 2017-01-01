@@ -1,6 +1,7 @@
 language: go
 go:
   - 1.7.1
+sudo: required
 env:
   global:
     - SSH_KEY="id_rsa"
