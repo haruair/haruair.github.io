@@ -1,7 +1,6 @@
 +++
 title = "New Year's Resolution"
 date = "2017-01-02T04:11:00+11:00"
-
 +++
 
 I'd love to make a list. New year's resolution is one of the things, I almost
