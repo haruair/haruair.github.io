@@ -3,6 +3,7 @@ set -e
 
 # Deploy built docs to this branch
 TARGET_BRANCH=gh-pages
+echo "Deploy to ($TARGET_BRNACH)"
 
 if [ ! -d "$SOURCE_DIR" ]; then
   echo "SOURCE_DIR ($SOURCE_DIR) does not exist, build the source directory before deploying"
