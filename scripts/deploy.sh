@@ -2,7 +2,7 @@
 set -e
 
 # Deploy built docs to this branch
-TARGET_BRANCH=gh-pages
+TARGET_BRANCH=master
 echo "Deploy to ($TARGET_BRNACH)"
 
 if [ ! -d "$SOURCE_DIR" ]; then
