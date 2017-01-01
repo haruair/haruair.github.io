@@ -1,7 +1,6 @@
 language: go
 go:
   - 1.7.1
-sudo: required
 env:
   global:
     - SSH_KEY="id_rsa"
@@ -25,3 +24,4 @@ after_success:
   - echo "haruair.github.io" > ./public/CNAME
   - chmod a+x ./scripts/deploy.sh
   - ./scripts/deploy.sh
+
