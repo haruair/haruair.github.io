@@ -54,7 +54,7 @@ if [ -n "$TRAVIS_BUILD_ID" ]; then
 fi
 
 REPO_NAME=$(basename $REPO)
-TARGET_DIR=$(sudo mktemp -d /tmp/$REPO_NAME.XXXX)
+TARGET_DIR=$TEMP_DIR
 REV=$(git rev-parse HEAD)
 git clone --branch ${TARGET_BRANCH} ${REPO} ${TARGET_DIR}
 rsync -rt --delete --exclude=".git" --exclude=".travis.yml" $SOURCE_DIR/ $TARGET_DIR/
