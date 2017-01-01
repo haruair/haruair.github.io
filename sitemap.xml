@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://haruair.github.io/post/new-years-resolution/</loc>
+    <lastmod>2017-01-02T04:11:00+11:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://haruair.github.io/about/</loc>
     <lastmod>2017-01-01T14:15:40+11:00</lastmod>
   </url>
@@ -12,8 +17,14 @@
   </url>
   
   <url>
+    <loc>https://haruair.github.io/blog/</loc>
+    <lastmod>2017-01-02T04:11:00+11:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://haruair.github.io/</loc>
-    <lastmod>2017-01-01T14:15:40+11:00</lastmod>
+    <lastmod>2017-01-02T04:11:00+11:00</lastmod>
     <priority>0</priority>
   </url>
   

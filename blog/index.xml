@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Eating My Code Everyday</title>
-    <link>https://haruair.github.io/index.xml</link>
-    <description>Recent content on Eating My Code Everyday</description>
+    <title>Blog on Eating My Code Everyday</title>
+    <link>https://haruair.github.io/blog/index.xml</link>
+    <description>Recent content in Blog on Eating My Code Everyday</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-AU</language>
     <lastBuildDate>Mon, 02 Jan 2017 04:11:00 +1100</lastBuildDate>
-    <atom:link href="https://haruair.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://haruair.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>New Year&#39;s Resolution</title>
@@ -43,37 +43,6 @@ study intensively. My expectation of this year is studying like a
 
 &lt;p&gt;Practice makes perfect. Everyone knows that, most of people doesn&amp;rsquo;t do that.
 I will make it for the perfection with this resolution in this year.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://haruair.github.io/about/</link>
-      <pubDate>Sun, 01 Jan 2017 14:15:40 +1100</pubDate>
-      
-      <guid>https://haruair.github.io/about/</guid>
-      <description>
-
-&lt;h1 id=&#34;edward-kim&#34;&gt;Edward Kim&lt;/h1&gt;
-
-&lt;p&gt;I&amp;rsquo;m an open web developer and am eating my code everyday.&lt;/p&gt;
-
-&lt;h2 id=&#34;get-in-touch&#34;&gt;Get in touch&lt;/h2&gt;
-
-&lt;p&gt;You can find me here &lt;a href=&#34;https://twitter.com/haruair&#34;&gt;twitter/haruair&lt;/a&gt;, and also
-&lt;a href=&#34;http://haruair.com&#34;&gt;haruair.com&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>code</title>
-      <link>https://haruair.github.io/code/</link>
-      <pubDate>Sun, 01 Jan 2017 14:15:40 +1100</pubDate>
-      
-      <guid>https://haruair.github.io/code/</guid>
-      <description>&lt;p&gt;Nothing on the list, just yet.&lt;/p&gt;
-
-&lt;p&gt;You can find my code on &lt;a href=&#34;https://github.com/haruair&#34;&gt;github.com/haruair&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
