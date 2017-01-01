@@ -5,7 +5,8 @@ date = "2017-01-02T04:11:00+11:00"
 +++
 
 I'd love to make a list. New year's resolution is one of the things, I almost
-forget at the end of the year, though. I want to list some ideas for 2017:
+forget about it at the end of the year, though. I want to list some ideas for
+2017:
 
 - Keep writing a blog as much as I did last year. But the difference is that the
 posts will be written by English.
