@@ -78,7 +78,12 @@ $ git remote add origin haruair.github.io
 I used `code` branch for the original source, the static file in `public`
 directory will goes into the `master` branch as an orphan branch.
 
-
+```bash
+$ hugo
+$ export HUGO_TEMP_DIR=$(mktemp -d)
+$ cp public/* $HUGO_TEMP_DIR
+$ git checkout --orphan master
+```
 
 - Create a github repo
 - Create an orphan `master` branch of the repository
