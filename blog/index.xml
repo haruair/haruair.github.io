@@ -33,7 +33,7 @@ the user, the field followed &lt;code&gt;on_delete&lt;/code&gt; action and tried
 because of the &lt;code&gt;unique_together&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;I should be more careful when I use &lt;code&gt;unique_together&lt;/code&gt;, Django is too easy to create this kind of
-relationship on the code, especially.&lt;/p&gt;
+relationship on the code, especially. With great power comes great responsibility!&lt;/p&gt;
 </description>
     </item>
     
