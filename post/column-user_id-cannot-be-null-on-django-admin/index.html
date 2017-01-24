@@ -14,10 +14,10 @@
 <title>
 
 
-     Fixed 
+     column `user_id` cannot be null on django admin 
 
 </title>
-<link rel="canonical" href="https://haruair.github.io/fixed/">
+<link rel="canonical" href="https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/">
 
 
 <script type="text/javascript">
@@ -54,8 +54,6 @@
 >
 
 
-
-  <link href="https://haruair.github.io/fixed/index.xml" rel="alternate" type="application/rss+xml" title="Eating My Code Everyday" />
 
 
 
@@ -114,28 +112,57 @@
     </div>
 </section>
 
-<section class="main">
+
+<section class="main post non-narrow zero-top-spacing">
     <div class="container">
         <div class="content">
-            <div class="page-heading">Blog</div>
-            <ul>
-                
-                <li class="post-item">
-    <span class="meta">1 Jan, 2017</span>
-    <a href="https://haruair.github.io/about/"><span>About</span></a>
-</li>
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
 
-                
-                <li class="post-item">
-    <span class="meta">1 Jan, 2017</span>
-    <a href="https://haruair.github.io/code/"><span>Code</span></a>
-</li>
+    column `user_id` cannot be null on django admin
 
+</div>
+
+                    <div class="initials"><a href="https://haruair.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Tue 24 Jan 2017 19:11:45 AEST">24 Jan, 2017</div>
+                    <div class="reading-time"><div class="middot"></div>1 minute read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>I&rsquo;ve got an IntegrityError when I remove the user from django-admin. I uses custom <code>User</code> model,
+but I didn&rsquo;t change that much rather than <code>AbrstractUser</code> from <code>django.contrib.auth.models</code>. The
+error was like this:</p>
+
+<pre><code>IntegrityError: (1048, &quot;Column 'user_id' cannot be null&quot;)
+</code></pre>
+
+<p>I couldn&rsquo;t find the case at all. I asussemed that the error occurs from MySQL, I checked all table
+schema one by one and finally found the reason.</p>
+
+<p>One of the model includes User <code>ForeignKey</code> with <code>on_delete=models.SET_DEFAULTS</code> which is fine
+because when remove the user, it will set the default value, <code>None</code> in this case. This model is the
+record for the signing policy so it also includes Policy <code>ForeignKey</code>. Then these fields sets as
+<code>unique_together</code> that the database create a unique key based on these two fields. When removed
+the user, the field followed <code>on_delete</code> action and tried to remove <code>user_id</code>, then the update failed
+because of the <code>unique_together</code>.</p>
+
+<p>I should be more careful when I use <code>unique_together</code>, Django is too easy to create this kind of
+relationship on the code, especially.</p>
+
+                <br>
+                <p><a href="https://haruair.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
                 
-            </ul>
+            </div>
         </div>
     </div>
 </section>
+
 
 
 <script>
@@ -158,5 +185,4 @@ ga('send', 'pageview');
 
 </body>
 </html>
-
 

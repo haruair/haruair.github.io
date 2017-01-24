@@ -6,8 +6,36 @@
     <description>Recent content on Eating My Code Everyday</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-AU</language>
-    <lastBuildDate>Mon, 02 Jan 2017 04:11:00 +1100</lastBuildDate>
+    <lastBuildDate>Tue, 24 Jan 2017 19:11:45 +1100</lastBuildDate>
     <atom:link href="https://haruair.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>column `user_id` cannot be null on django admin</title>
+      <link>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</link>
+      <pubDate>Tue, 24 Jan 2017 19:11:45 +1100</pubDate>
+      
+      <guid>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve got an IntegrityError when I remove the user from django-admin. I uses custom &lt;code&gt;User&lt;/code&gt; model,
+but I didn&amp;rsquo;t change that much rather than &lt;code&gt;AbrstractUser&lt;/code&gt; from &lt;code&gt;django.contrib.auth.models&lt;/code&gt;. The
+error was like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IntegrityError: (1048, &amp;quot;Column &#39;user_id&#39; cannot be null&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I couldn&amp;rsquo;t find the case at all. I asussemed that the error occurs from MySQL, I checked all table
+schema one by one and finally found the reason.&lt;/p&gt;
+
+&lt;p&gt;One of the model includes User &lt;code&gt;ForeignKey&lt;/code&gt; with &lt;code&gt;on_delete=models.SET_DEFAULTS&lt;/code&gt; which is fine
+because when remove the user, it will set the default value, &lt;code&gt;None&lt;/code&gt; in this case. This model is the
+record for the signing policy so it also includes Policy &lt;code&gt;ForeignKey&lt;/code&gt;. Then these fields sets as
+&lt;code&gt;unique_together&lt;/code&gt; that the database create a unique key based on these two fields. When removed
+the user, the field followed &lt;code&gt;on_delete&lt;/code&gt; action and tried to remove &lt;code&gt;user_id&lt;/code&gt;, then the update failed
+because of the &lt;code&gt;unique_together&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I should be more careful when I use &lt;code&gt;unique_together&lt;/code&gt;, Django is too easy to create this kind of
+relationship on the code, especially.&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>New Year&#39;s Resolution</title>
