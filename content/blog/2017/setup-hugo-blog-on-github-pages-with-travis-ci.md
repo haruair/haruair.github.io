@@ -33,7 +33,8 @@ Mac user, check the [Releases page](https://github.com/spf13/hugo/releases).
 
 ## Basic Usage
 
-The excerpt of [Quickstart](https://gohugo.io/overview/quickstart/) document is the below:
+The excerpt of [Quickstart](https://gohugo.io/overview/quickstart/) document is
+the below:
 
 ```bash
 $ hugo new site haruair
@@ -43,9 +44,9 @@ $ hugo
 
 You can find the result under the `public` directory after `hugo` run.
 
-Hugo provides simple webserver for the local. `--watch` flag is useful for the editing
-that the page will refresh every save moment. Also, it's avilable to build within drafts
-using `--buildDrafts` or `-D`.
+Hugo provides simple webserver for the local. `--watch` flag is useful for the
+editing that the page will refresh every save moment. Also, it's avilable to
+build within drafts using `--buildDrafts` or `-D`.
 
 ```bash
 $ hugo server --watch --buildDrafts
@@ -54,15 +55,47 @@ $ hugo server -w -D # same as the above
 
 ## Initialize a git repository
 
+The strength of static blog is that it don't need any program specific
+environment. There are several options, Amazon S3, Dropbox, etc. Even it's
+possible to use some abandoned old geocity-ish service. Github provides Github
+Pages for this case and it's free to use.
+
+Create a [Github](https://github.com) account if you don't have one. Then,
+Create a repository using `<username>.github.io` as a name.
+
+Go to the your hugo directory, and make it as a git repository, then push
+it to Github.
+
+```bash
+$ git init
+$ git checkout -b code
+$ echo '/public/' >> .gitignore
+$ git add .
+$ git commit -m "Initial my blog"
+$ git remote add origin haruair.github.io
+```
+
+I used `code` branch for the original source, the static file in `public`
+directory will goes into the `master` branch as an orphan branch.
+
+```bash
+$ hugo
+$ export HUGO_TEMP_DIR=$(mktemp -d)
+$ cp public/* $HUGO_TEMP_DIR
+$ git checkout --orphan master
+```
+
 - Create a github repo
 - Create an orphan `master` branch of the repository
 - Create a `code` branch for the original
 
 ## Add a deploy script
 
-If you build the site manually, it's just boring. Travis CI allows us to add a deploy script after
-build the static pages. I found [the script](https://github.com/rcoedo/rcoedo.github.io/blob/source/scripts/deploy.sh)
-from [rcoedo.com](http://rcoedo.com/post/hugo-static-site-generator/), I just put my script below, just in case.
+If you build the site manually, it's just boring. Travis CI allows us to add a
+deploy script after build the static pages. I found
+[the script](https://github.com/rcoedo/rcoedo.github.io/blob/source/scripts/deploy.sh)
+from [rcoedo.com](http://rcoedo.com/post/hugo-static-site-generator/), I just
+put my script below, just in case.
 
 ```bash
 $ mkdir scripts && cd scripts
@@ -72,37 +105,41 @@ $ git add deploy.sh && git commit -m "Add deploy script"
 
 ## Create a `.travis.yml` file
 
-I do love pre-config. The config is [here](https://github.com/haruair/haruair.github.io/blob/code/.travis.yml).
+I do love pre-config. The config is
+[here](https://github.com/haruair/haruair.github.io/blob/code/.travis.yml).
 This config need to update as own details.
 
-The important part is `before_install` part. Delete this section from the yml file, then add it back with
-your ssh key. Yes, your ssh key!
+The important part is `before_install` part. Delete this section from the yml
+file, then add it back with your ssh key. Yes, your ssh key!
 
 Before add the key into the repository, it will encrypt using `travis`. Please
 be aware, do not add the original private key into the repository.
 
 ### Install `travis`
 
-Travis CI provides a CIL tool for the work. Let's install this tool, first. It's using Ruby, therefore, you can
-install it via gem.
+Travis CI provides a CIL tool for the work. Let's install this tool, first.
+It's using Ruby, therefore, you can install it via gem.
 
 ```bash
 $ gem install travis --no-rdoc -no-ri
 ```
 
-If you don't have Ruby on your machine, please check [the document from Travis CI](https://github.com/travis-ci/travis.rb#updating-your-ruby).
+If you don't have Ruby on your machine, please check
+[the document from Travis CI](https://github.com/travis-ci/travis.rb#updating-your-ruby).
 
 ### Create a new ssh key and encrypt it
 
-It's available to use an existing key, however, creating new one for Travis CI is good for the security. Make sure
-that `ssh-keygen` can be overriding a default key `id_rsa`, be careful before type the enter.
+It's available to use an existing key, however, creating new one for Travis CI
+is good for the security. Make sure that `ssh-keygen` can be overriding a
+default key `id_rsa`, be careful before type the enter.
 
 ```bash
 $ ssh-keygen
 ```
 
-I created the ssh key named `travis_key`. The result of this commend is the pair of the key: `travis_key` and `travis_key.pub`.
-The first one is a private key, the other file is a public one.
+I created the ssh key named `travis_key`. The result of this commend is the
+pair of the key: `travis_key` and `travis_key.pub`. The first one is a private
+key, the other file is a public one.
 
 - add a private key with `travis encrypt-file travis_key` (it requires `travis login`)
 
