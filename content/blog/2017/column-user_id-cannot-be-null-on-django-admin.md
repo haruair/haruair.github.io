@@ -23,5 +23,5 @@ the user, the field followed `on_delete` action and tried to remove `user_id`, t
 because of the `unique_together`.
 
 I should be more careful when I use `unique_together`, Django is too easy to create this kind of
-relationship on the code, especially.
+relationship on the code, especially. With great power comes great responsibility!
 
