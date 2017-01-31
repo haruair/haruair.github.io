@@ -80,3 +80,6 @@ openbox --reconfigure
 
 Now, <kbd>Win+L</kbd> will be the key just like a touchpad on/off switch.
 
+This is not a good solution. There are so many options for this type of
+configuration, You can achieve same thing in other ways.
+
