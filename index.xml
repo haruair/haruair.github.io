@@ -85,6 +85,9 @@ keybind.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Now, &lt;kbd&gt;Win+L&lt;/kbd&gt; will be the key just like a touchpad on/off switch.&lt;/p&gt;
+
+&lt;p&gt;This is not a good solution. There are so many options for this type of
+configuration, You can achieve same thing in other ways.&lt;/p&gt;
 </description>
     </item>
     
