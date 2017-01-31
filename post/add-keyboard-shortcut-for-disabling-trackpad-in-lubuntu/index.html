@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="I love Web-thing">
+
+<base href="https://haruair.github.io/">
+<title>
+
+
+     Add keyboard shortcut for disabling trackpad in Lubuntu 
+
+</title>
+<link rel="canonical" href="https://haruair.github.io/post/add-keyboard-shortcut-for-disabling-trackpad-in-lubuntu/">
+
+
+<script type="text/javascript">
+    var baseURL = 'https:\/\/haruair.github.io\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+
+
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/styles/default.min.css">
+
+
+
+
+
+<link rel="stylesheet" href="https://haruair.github.io/css/reset.css?t=1485869627">
+<link rel="stylesheet" href="https://haruair.github.io/css/pygments.css?t=1485869627">
+<link rel="stylesheet" href="https://haruair.github.io/css/main.css?t=1485869627">
+
+    <link rel="stylesheet" href="https://haruair.github.io/css/custom.css?t=1485869627">
+
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://haruair.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header"> 
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://haruair.github.io/"><div class="name">Edward Kim</div></a>
+            <nav>
+                <ul>
+                    <a href="https://haruair.github.io/blog/"><li>Blog</li></a>
+                    <a href="https://haruair.github.io/about/"><li>About</li></a>
+                    <a href="https://haruair.github.io/code/"><li>Code</li></a>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+
+        
+            <a href="//github.com/haruair" target="_blank">
+                <i class="icon ion-social-github"></i>
+            </a>
+        
+        
+        
+            <a href="//twitter.com/haruair" target="_blank">
+                <i class="icon ion-social-twitter"></i>
+            </a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="https://haruair.github.io/index.xml">
+                <i class="icon ion-social-rss larger"></i>
+            </a>
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Add keyboard shortcut for disabling trackpad in Lubuntu
+
+</div>
+
+                    <div class="initials"><a href="https://haruair.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Tue 31 Jan 2017 15:11:45 AEST">31 Jan, 2017</div>
+                    <div class="reading-time"><div class="middot"></div>2 minutes read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>I&rsquo;ve sold Dell XPS 13 because of a keyboard, I&rsquo;m back to Dell Inspiron 11 3000.
+I bought this marchine 8 months ago, Windows 10 was a bit heavy on this laptop.
+So I replaced OS as Lubuntu. The laptop is low spec but it&rsquo;s not bad for the
+normal terminal work.</p>
+
+<p>Only thing I hate is that this laptop doesn&rsquo;t have a palm rejection. The touch
+pad is almost unusable, I think they forgot someone actually can use it as a
+pointing device. So I instantly searched how to disable the touchpad when I
+want. I found <a href="http://askubuntu.com/a/160549">this solution</a>.</p>
+
+<p>I can see the device on <code>xinput</code>, but I cannot temporary disabled the touch pad
+using this script. It turns out, the other weird looking name one is actual
+touch pad. It shows up <code>DLL0725:01 06CB:7D47</code> for me.</p>
+
+<p>Also, <code>xinput disable &lt;id&gt;</code> makes something weird. When I use this shell script,
+the cursor is disappeared. So I changed the script like below:</p>
+
+<pre><code class="language-bash">#!/bin/bash
+# toggle state of synaptics touchpad
+
+# changed SynPS to DLL because of the name
+tpid=`xinput list | grep DLL | sed 's/.*id\=\([0-9]\+\).*/\1/g'`
+
+# find out Device Enabled prop from the device
+prop=`xinput list-props ${tpid} | grep Device\ Enabled`
+propid=`echo ${prop} | sed -e &quot;s/.*(\([0-9]\+\).*/\1/g&quot;`
+status=`echo ${prop} | sed -e &quot;s/.*\:[ \t]\+//g&quot;`
+
+
+if [ 0 -eq ${status} ] ; then
+    xinput set-prop ${tpid} ${propid} 1
+else
+    xinput set-prop ${tpid} ${propid} 0
+fi
+</code></pre>
+
+<p>I saved this file as <code>toggle-touchpad.sh</code> at user directory and changed the file
+permission. I&rsquo;m not sure the script is good enough so if you think this script
+can be upgraded, please leave a PR to the article.</p>
+
+<pre><code class="language-bash">chmod +x toggle-touchpad.sh
+</code></pre>
+
+<p>My first thought is that this shell file should excute when Vim change to Insert
+mode. So I added <code>autocmd</code> config into the vim config file.</p>
+
+<pre><code class="language-vimrc">autocmd InsertEnter * silent! execute &quot;!~/toggle-touchpad.sh &gt; /dev/null 2&gt;&amp;1&quot; | redraw!
+autocmd InsertLeave * silent! execute &quot;!~/toggle-touchpad.sh &gt; /dev/null 2&gt;&amp;1&quot; | redraw!
+</code></pre>
+
+<p>This event triggered when Vim change to Insert mode. I realised that the insert
+mode is the good solution because I couldn&rsquo;t use my mouse when I did Alt-Tab
+action during the edit. Therefore, I added another hotkey for this script. I
+updated this code into <code>openbox_config &gt; Keyboard</code> in
+<code>~/.config/openbox/lubuntu-rc.xml</code> file. You can change if you want to use other
+keybind.</p>
+
+<pre><code class="language-xml">&lt;keybind key=&quot;W-l&quot;&gt;
+    &lt;action name=&quot;Execute&quot;&gt;
+        &lt;command&gt;~/toggle-touchpad.sh&lt;/command&gt;
+    &lt;/action&gt;
+&lt;/keybind&gt;
+</code></pre>
+
+<p>Then refresh Openbox for the updating.</p>
+
+<pre><code class="language-bash">openbox --reconfigure
+</code></pre>
+
+<p>Now, <kbd>Win+L</kbd> will be the key just like a touchpad on/off switch.</p>
+
+                <br>
+                <p><a href="https://haruair.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-89657110-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.8.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+</body>
+</html>
+
