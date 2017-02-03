@@ -1,7 +1,6 @@
 +++
 date = "2017-01-02T11:10:12+11:00"
 title = "Setup Hugo blog on Github Pages with Travis CI"
-draft = true
 
 +++
 
@@ -85,10 +84,6 @@ $ cp public/* $HUGO_TEMP_DIR
 $ git checkout --orphan master
 ```
 
-- Create a github repo
-- Create an orphan `master` branch of the repository
-- Create a `code` branch for the original
-
 ## Add a deploy script
 
 If you build the site manually, it's just boring. Travis CI allows us to add a
@@ -105,7 +100,7 @@ $ git add deploy.sh && git commit -m "Add deploy script"
 
 ## Create a `.travis.yml` file
 
-I do love pre-config. The config is
+I do love pre-config file. The config is
 [here](https://github.com/haruair/haruair.github.io/blob/code/.travis.yml).
 This config need to update as own details.
 
@@ -141,13 +136,41 @@ I created the ssh key named `travis_key`. The result of this commend is the
 pair of the key: `travis_key` and `travis_key.pub`. The first one is a private
 key, the other file is a public one.
 
-- add a private key with `travis encrypt-file travis_key` (it requires `travis login`)
+Now, we can add `travis_key` into Travis using the commend below:
+
+```bash
+$ travis encrypt-file travis_key
+```
+
+If you are not logged in Travis before, you may need to run `travis login`
+first.
+
+After then, travis add encrypt file and set the environment variable for the
+encrypt file. Make sure all files are included in git repository and push it
+to Github. Also, do not commit the "unencrypt key" into your repository.
 
 ### Register the new key in Github
 
-Add a pubkey in Github
+In Github setting page, go to the ssh section and add `travis_key.pub` for the
+deploy. [More informations here](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).
 
 ### Enable a repository on Travis CI
 
-Enable a repository on Travis CI
+Go to [the profile page of Travis CI](https://travis-ci.org/profile), Find out
+the repository, then turn on the switch. It will do the build and will push back
+to Github `master` branch.
+
+----
+
+All done. Just add new post using Hugo, push to Github, Travis will handle all
+build problem.
+
+The quickest and the easiest way is here. Clone my repository
+[haruair.github.io](http://github.com/haruair/haruair.github.io), clean up
+all details and configurations, and use it. Please make sure that the credential
+is correct.
+
+It's a quite long description than I thought. Tools support the writing, however,
+the key of writing is based on all own ideas. Keep sharpening your idea using
+awesome writing tool Hugo.
 
