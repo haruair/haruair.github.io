@@ -120,6 +120,177 @@ relationship on the code, especially. With great power comes great responsibilit
     </item>
     
     <item>
+      <title>Setup Hugo blog on Github Pages with Travis CI</title>
+      <link>https://haruair.github.io/post/setup-hugo-blog-on-github-pages-with-travis-ci/</link>
+      <pubDate>Mon, 02 Jan 2017 11:10:12 +1100</pubDate>
+      
+      <guid>https://haruair.github.io/post/setup-hugo-blog-on-github-pages-with-travis-ci/</guid>
+      <description>
+
+&lt;p&gt;I don&amp;rsquo;t know much about Go, but I saw so many tweets it&amp;rsquo;s a great language,
+performance wise especially. Hugo is a static blog/site generator written by Go.
+I feel great with Hugo because of the simplicity. The program is provided as a
+single binary file. Other tools require a lot of small settings, installing
+language, setting envrionment, handling a package manager, for example. It still
+requires some config file, but no worries, it&amp;rsquo;s not that big.&lt;/p&gt;
+
+&lt;p&gt;This blog serves on Github Pages. If the blog is using Jekyll, Github is the
+best place to serve the blog because Github provides built-in Jekyll serving as
+a first citizen. Otherwise, Hugo is in the wild. After writing something new,
+it need to render new static pages, then push that files on the repository.
+When you publish every single time by hand, it is a huge chore and I will never
+use it again. In that case, TravisCI is the solution. It&amp;rsquo;s available to use
+it for the rendering after new post pushed.&lt;/p&gt;
+
+&lt;h2 id=&#34;install-hugo-https-gohugo-io-overview-installing&#34;&gt;&lt;a href=&#34;https://gohugo.io/overview/installing/&#34;&gt;Install Hugo&lt;/a&gt;&lt;/h2&gt;
+
+&lt;p&gt;Mac users can install Hugo via &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; easily.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ brew update &amp;amp;&amp;amp; brew install hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The installation is very easy for the most of the platforms. If you are not a
+Mac user, check the &lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;Releases page&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;basic-usage&#34;&gt;Basic Usage&lt;/h2&gt;
+
+&lt;p&gt;The excerpt of &lt;a href=&#34;https://gohugo.io/overview/quickstart/&#34;&gt;Quickstart&lt;/a&gt; document is
+the below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ hugo new site haruair
+$ hugo new post/hello-world.md
+$ hugo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can find the result under the &lt;code&gt;public&lt;/code&gt; directory after &lt;code&gt;hugo&lt;/code&gt; run.&lt;/p&gt;
+
+&lt;p&gt;Hugo provides simple webserver for the local. &lt;code&gt;--watch&lt;/code&gt; flag is useful for the
+editing that the page will refresh every save moment. Also, it&amp;rsquo;s avilable to
+build within drafts using &lt;code&gt;--buildDrafts&lt;/code&gt; or &lt;code&gt;-D&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ hugo server --watch --buildDrafts
+$ hugo server -w -D # same as the above
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;initialize-a-git-repository&#34;&gt;Initialize a git repository&lt;/h2&gt;
+
+&lt;p&gt;The strength of static blog is that it don&amp;rsquo;t need any program specific
+environment. There are several options, Amazon S3, Dropbox, etc. Even it&amp;rsquo;s
+possible to use some abandoned old geocity-ish service. Github provides Github
+Pages for this case and it&amp;rsquo;s free to use.&lt;/p&gt;
+
+&lt;p&gt;Create a &lt;a href=&#34;https://github.com&#34;&gt;Github&lt;/a&gt; account if you don&amp;rsquo;t have one. Then,
+Create a repository using &lt;code&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt; as a name.&lt;/p&gt;
+
+&lt;p&gt;Go to the your hugo directory, and make it as a git repository, then push
+it to Github.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ git init
+$ git checkout -b code
+$ echo &#39;/public/&#39; &amp;gt;&amp;gt; .gitignore
+$ git add .
+$ git commit -m &amp;quot;Initial my blog&amp;quot;
+$ git remote add origin haruair.github.io
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I used &lt;code&gt;code&lt;/code&gt; branch for the original source, the static file in &lt;code&gt;public&lt;/code&gt;
+directory will goes into the &lt;code&gt;master&lt;/code&gt; branch as an orphan branch.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ hugo
+$ export HUGO_TEMP_DIR=$(mktemp -d)
+$ cp public/* $HUGO_TEMP_DIR
+$ git checkout --orphan master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;add-a-deploy-script&#34;&gt;Add a deploy script&lt;/h2&gt;
+
+&lt;p&gt;If you build the site manually, it&amp;rsquo;s just boring. Travis CI allows us to add a
+deploy script after build the static pages. I found
+&lt;a href=&#34;https://github.com/rcoedo/rcoedo.github.io/blob/source/scripts/deploy.sh&#34;&gt;the script&lt;/a&gt;
+from &lt;a href=&#34;http://rcoedo.com/post/hugo-static-site-generator/&#34;&gt;rcoedo.com&lt;/a&gt;, I just
+put my script below, just in case.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir scripts &amp;amp;&amp;amp; cd scripts
+$ wget https://raw.githubusercontent.com/haruair/haruair.github.io/code/scripts/deploy.sh
+$ git add deploy.sh &amp;amp;&amp;amp; git commit -m &amp;quot;Add deploy script&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;create-a-travis-yml-file&#34;&gt;Create a &lt;code&gt;.travis.yml&lt;/code&gt; file&lt;/h2&gt;
+
+&lt;p&gt;I do love pre-config file. The config is
+&lt;a href=&#34;https://github.com/haruair/haruair.github.io/blob/code/.travis.yml&#34;&gt;here&lt;/a&gt;.
+This config need to update as own details.&lt;/p&gt;
+
+&lt;p&gt;The important part is &lt;code&gt;before_install&lt;/code&gt; part. Delete this section from the yml
+file, then add it back with your ssh key. Yes, your ssh key!&lt;/p&gt;
+
+&lt;p&gt;Before add the key into the repository, it will encrypt using &lt;code&gt;travis&lt;/code&gt;. Please
+be aware, do not add the original private key into the repository.&lt;/p&gt;
+
+&lt;h3 id=&#34;install-travis&#34;&gt;Install &lt;code&gt;travis&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Travis CI provides a CIL tool for the work. Let&amp;rsquo;s install this tool, first.
+It&amp;rsquo;s using Ruby, therefore, you can install it via gem.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ gem install travis --no-rdoc -no-ri
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t have Ruby on your machine, please check
+&lt;a href=&#34;https://github.com/travis-ci/travis.rb#updating-your-ruby&#34;&gt;the document from Travis CI&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;create-a-new-ssh-key-and-encrypt-it&#34;&gt;Create a new ssh key and encrypt it&lt;/h3&gt;
+
+&lt;p&gt;It&amp;rsquo;s available to use an existing key, however, creating new one for Travis CI
+is good for the security. Make sure that &lt;code&gt;ssh-keygen&lt;/code&gt; can be overriding a
+default key &lt;code&gt;id_rsa&lt;/code&gt;, be careful before type the enter.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ssh-keygen
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I created the ssh key named &lt;code&gt;travis_key&lt;/code&gt;. The result of this commend is the
+pair of the key: &lt;code&gt;travis_key&lt;/code&gt; and &lt;code&gt;travis_key.pub&lt;/code&gt;. The first one is a private
+key, the other file is a public one.&lt;/p&gt;
+
+&lt;p&gt;Now, we can add &lt;code&gt;travis_key&lt;/code&gt; into Travis using the commend below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ travis encrypt-file travis_key
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you are not logged in Travis before, you may need to run &lt;code&gt;travis login&lt;/code&gt;
+first.&lt;/p&gt;
+
+&lt;p&gt;After then, travis add encrypt file and set the environment variable for the
+encrypt file. Make sure all files are included in git repository and push it
+to Github. Also, do not commit the &amp;ldquo;unencrypt key&amp;rdquo; into your repository.&lt;/p&gt;
+
+&lt;h3 id=&#34;register-the-new-key-in-github&#34;&gt;Register the new key in Github&lt;/h3&gt;
+
+&lt;p&gt;In Github setting page, go to the ssh section and add &lt;code&gt;travis_key.pub&lt;/code&gt; for the
+deploy. &lt;a href=&#34;https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/&#34;&gt;More informations here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;enable-a-repository-on-travis-ci&#34;&gt;Enable a repository on Travis CI&lt;/h3&gt;
+
+&lt;p&gt;Go to &lt;a href=&#34;https://travis-ci.org/profile&#34;&gt;the profile page of Travis CI&lt;/a&gt;, Find out
+the repository, then turn on the switch. It will do the build and will push back
+to Github &lt;code&gt;master&lt;/code&gt; branch.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;All done. Just add new post using Hugo, push to Github, Travis will handle all
+build problem.&lt;/p&gt;
+
+&lt;p&gt;The quickest and the easiest way is here. Clone my repository
+&lt;a href=&#34;http://github.com/haruair/haruair.github.io&#34;&gt;haruair.github.io&lt;/a&gt;, clean up
+all details and configurations, and use it. Please make sure that the credential
+is correct.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s a quite long description than I thought. Tools support the writing, however,
+the key of writing is based on all own ideas. Keep sharpening your idea using
+awesome writing tool Hugo.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>New Year&#39;s Resolution</title>
       <link>https://haruair.github.io/post/new-years-resolution/</link>
       <pubDate>Mon, 02 Jan 2017 04:11:00 +1100</pubDate>
