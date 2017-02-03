@@ -6,123 +6,13 @@
     <description>Recent content in Blog on Eating My Code Everyday</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-AU</language>
-    <lastBuildDate>Tue, 31 Jan 2017 15:11:45 +1100</lastBuildDate>
+    <lastBuildDate>Sat, 04 Feb 2017 11:10:12 +1100</lastBuildDate>
     <atom:link href="https://haruair.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Add keyboard shortcut for disabling trackpad in Lubuntu</title>
-      <link>https://haruair.github.io/post/add-keyboard-shortcut-for-disabling-trackpad-in-lubuntu/</link>
-      <pubDate>Tue, 31 Jan 2017 15:11:45 +1100</pubDate>
-      
-      <guid>https://haruair.github.io/post/add-keyboard-shortcut-for-disabling-trackpad-in-lubuntu/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve sold Dell XPS 13 because of a keyboard, I&amp;rsquo;m back to Dell Inspiron 11 3000.
-I bought this marchine 8 months ago, Windows 10 was a bit heavy on this laptop.
-So I replaced OS as Lubuntu. The laptop is low spec but it&amp;rsquo;s not bad for the
-normal terminal work.&lt;/p&gt;
-
-&lt;p&gt;Only thing I hate is that this laptop doesn&amp;rsquo;t have a palm rejection. The touch
-pad is almost unusable, I think they forgot someone actually can use it as a
-pointing device. So I instantly searched how to disable the touchpad when I
-want. I found &lt;a href=&#34;http://askubuntu.com/a/160549&#34;&gt;this solution&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I can see the device on &lt;code&gt;xinput&lt;/code&gt;, but I cannot temporary disabled the touch pad
-using this script. It turns out, the other weird looking name one is actual
-touch pad. It shows up &lt;code&gt;DLL0725:01 06CB:7D47&lt;/code&gt; for me.&lt;/p&gt;
-
-&lt;p&gt;Also, &lt;code&gt;xinput disable &amp;lt;id&amp;gt;&lt;/code&gt; makes something weird. When I use this shell script,
-the cursor is disappeared. So I changed the script like below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/bash
-# toggle state of synaptics touchpad
-
-# changed SynPS to DLL because of the name
-tpid=`xinput list | grep DLL | sed &#39;s/.*id\=\([0-9]\+\).*/\1/g&#39;`
-
-# find out Device Enabled prop from the device
-prop=`xinput list-props ${tpid} | grep Device\ Enabled`
-propid=`echo ${prop} | sed -e &amp;quot;s/.*(\([0-9]\+\).*/\1/g&amp;quot;`
-status=`echo ${prop} | sed -e &amp;quot;s/.*\:[ \t]\+//g&amp;quot;`
-
-
-if [ 0 -eq ${status} ] ; then
-    xinput set-prop ${tpid} ${propid} 1
-else
-    xinput set-prop ${tpid} ${propid} 0
-fi
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I saved this file as &lt;code&gt;toggle-touchpad.sh&lt;/code&gt; at user directory and changed the file
-permission. I&amp;rsquo;m not sure the script is good enough so if you think this script
-can be upgraded, please leave a PR to the article.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;chmod +x toggle-touchpad.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;My first thought is that this shell file should excute when Vim change to Insert
-mode. So I added &lt;code&gt;autocmd&lt;/code&gt; config into the vim config file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-vimrc&#34;&gt;autocmd InsertEnter * silent! execute &amp;quot;!~/toggle-touchpad.sh &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&amp;quot; | redraw!
-autocmd InsertLeave * silent! execute &amp;quot;!~/toggle-touchpad.sh &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&amp;quot; | redraw!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This event triggered when Vim change to Insert mode. I realised that the insert
-mode is the good solution because I couldn&amp;rsquo;t use my mouse when I did Alt-Tab
-action during the edit. Therefore, I added another hotkey for this script. I
-updated this code into &lt;code&gt;openbox_config &amp;gt; Keyboard&lt;/code&gt; in
-&lt;code&gt;~/.config/openbox/lubuntu-rc.xml&lt;/code&gt; file. You can change if you want to use other
-keybind.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;keybind key=&amp;quot;W-l&amp;quot;&amp;gt;
-    &amp;lt;action name=&amp;quot;Execute&amp;quot;&amp;gt;
-        &amp;lt;command&amp;gt;~/toggle-touchpad.sh&amp;lt;/command&amp;gt;
-    &amp;lt;/action&amp;gt;
-&amp;lt;/keybind&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then refresh Openbox for the updating.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;openbox --reconfigure
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, &lt;kbd&gt;Win+L&lt;/kbd&gt; will be the key just like a touchpad on/off switch.&lt;/p&gt;
-
-&lt;p&gt;This is not a good solution. There are so many options for this type of
-configuration, You can achieve same thing in other ways.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>column `user_id` cannot be null on django admin</title>
-      <link>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</link>
-      <pubDate>Tue, 24 Jan 2017 19:11:45 +1100</pubDate>
-      
-      <guid>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve got an IntegrityError when I remove the user from django-admin. I uses custom &lt;code&gt;User&lt;/code&gt; model,
-but I didn&amp;rsquo;t change that much rather than &lt;code&gt;AbrstractUser&lt;/code&gt; from &lt;code&gt;django.contrib.auth.models&lt;/code&gt;. The
-error was like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;IntegrityError: (1048, &amp;quot;Column &#39;user_id&#39; cannot be null&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I couldn&amp;rsquo;t find the case at all. I asussemed that the error occurs from MySQL, I checked all table
-schema one by one and finally found the reason.&lt;/p&gt;
-
-&lt;p&gt;One of the model includes User &lt;code&gt;ForeignKey&lt;/code&gt; with &lt;code&gt;on_delete=models.SET_DEFAULTS&lt;/code&gt; which is fine
-because when remove the user, it will set the default value, &lt;code&gt;None&lt;/code&gt; in this case. This model is the
-record for the signing policy so it also includes Policy &lt;code&gt;ForeignKey&lt;/code&gt;. Then these fields sets as
-&lt;code&gt;unique_together&lt;/code&gt; that the database create a unique key based on these two fields. When removed
-the user, the field followed &lt;code&gt;on_delete&lt;/code&gt; action and tried to remove &lt;code&gt;user_id&lt;/code&gt;, then the update failed
-because of the &lt;code&gt;unique_together&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;I should be more careful when I use &lt;code&gt;unique_together&lt;/code&gt;, Django is too easy to create this kind of
-relationship on the code, especially. With great power comes great responsibility!&lt;/p&gt;
-</description>
-    </item>
     
     <item>
       <title>Setup Hugo blog on Github Pages with Travis CI</title>
       <link>https://haruair.github.io/post/setup-hugo-blog-on-github-pages-with-travis-ci/</link>
-      <pubDate>Mon, 02 Jan 2017 11:10:12 +1100</pubDate>
+      <pubDate>Sat, 04 Feb 2017 11:10:12 +1100</pubDate>
       
       <guid>https://haruair.github.io/post/setup-hugo-blog-on-github-pages-with-travis-ci/</guid>
       <description>
@@ -287,6 +177,116 @@ is correct.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s a quite long description than I thought. Tools support the writing, however,
 the key of writing is based on all own ideas. Keep sharpening your idea using
 awesome writing tool Hugo.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Add keyboard shortcut for disabling trackpad in Lubuntu</title>
+      <link>https://haruair.github.io/post/add-keyboard-shortcut-for-disabling-trackpad-in-lubuntu/</link>
+      <pubDate>Tue, 31 Jan 2017 15:11:45 +1100</pubDate>
+      
+      <guid>https://haruair.github.io/post/add-keyboard-shortcut-for-disabling-trackpad-in-lubuntu/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve sold Dell XPS 13 because of a keyboard, I&amp;rsquo;m back to Dell Inspiron 11 3000.
+I bought this marchine 8 months ago, Windows 10 was a bit heavy on this laptop.
+So I replaced OS as Lubuntu. The laptop is low spec but it&amp;rsquo;s not bad for the
+normal terminal work.&lt;/p&gt;
+
+&lt;p&gt;Only thing I hate is that this laptop doesn&amp;rsquo;t have a palm rejection. The touch
+pad is almost unusable, I think they forgot someone actually can use it as a
+pointing device. So I instantly searched how to disable the touchpad when I
+want. I found &lt;a href=&#34;http://askubuntu.com/a/160549&#34;&gt;this solution&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I can see the device on &lt;code&gt;xinput&lt;/code&gt;, but I cannot temporary disabled the touch pad
+using this script. It turns out, the other weird looking name one is actual
+touch pad. It shows up &lt;code&gt;DLL0725:01 06CB:7D47&lt;/code&gt; for me.&lt;/p&gt;
+
+&lt;p&gt;Also, &lt;code&gt;xinput disable &amp;lt;id&amp;gt;&lt;/code&gt; makes something weird. When I use this shell script,
+the cursor is disappeared. So I changed the script like below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/bash
+# toggle state of synaptics touchpad
+
+# changed SynPS to DLL because of the name
+tpid=`xinput list | grep DLL | sed &#39;s/.*id\=\([0-9]\+\).*/\1/g&#39;`
+
+# find out Device Enabled prop from the device
+prop=`xinput list-props ${tpid} | grep Device\ Enabled`
+propid=`echo ${prop} | sed -e &amp;quot;s/.*(\([0-9]\+\).*/\1/g&amp;quot;`
+status=`echo ${prop} | sed -e &amp;quot;s/.*\:[ \t]\+//g&amp;quot;`
+
+
+if [ 0 -eq ${status} ] ; then
+    xinput set-prop ${tpid} ${propid} 1
+else
+    xinput set-prop ${tpid} ${propid} 0
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I saved this file as &lt;code&gt;toggle-touchpad.sh&lt;/code&gt; at user directory and changed the file
+permission. I&amp;rsquo;m not sure the script is good enough so if you think this script
+can be upgraded, please leave a PR to the article.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;chmod +x toggle-touchpad.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;My first thought is that this shell file should excute when Vim change to Insert
+mode. So I added &lt;code&gt;autocmd&lt;/code&gt; config into the vim config file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-vimrc&#34;&gt;autocmd InsertEnter * silent! execute &amp;quot;!~/toggle-touchpad.sh &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&amp;quot; | redraw!
+autocmd InsertLeave * silent! execute &amp;quot;!~/toggle-touchpad.sh &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&amp;quot; | redraw!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This event triggered when Vim change to Insert mode. I realised that the insert
+mode is the good solution because I couldn&amp;rsquo;t use my mouse when I did Alt-Tab
+action during the edit. Therefore, I added another hotkey for this script. I
+updated this code into &lt;code&gt;openbox_config &amp;gt; Keyboard&lt;/code&gt; in
+&lt;code&gt;~/.config/openbox/lubuntu-rc.xml&lt;/code&gt; file. You can change if you want to use other
+keybind.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;keybind key=&amp;quot;W-l&amp;quot;&amp;gt;
+    &amp;lt;action name=&amp;quot;Execute&amp;quot;&amp;gt;
+        &amp;lt;command&amp;gt;~/toggle-touchpad.sh&amp;lt;/command&amp;gt;
+    &amp;lt;/action&amp;gt;
+&amp;lt;/keybind&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then refresh Openbox for the updating.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;openbox --reconfigure
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, &lt;kbd&gt;Win+L&lt;/kbd&gt; will be the key just like a touchpad on/off switch.&lt;/p&gt;
+
+&lt;p&gt;This is not a good solution. There are so many options for this type of
+configuration, You can achieve same thing in other ways.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>column `user_id` cannot be null on django admin</title>
+      <link>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</link>
+      <pubDate>Tue, 24 Jan 2017 19:11:45 +1100</pubDate>
+      
+      <guid>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve got an IntegrityError when I remove the user from django-admin. I uses custom &lt;code&gt;User&lt;/code&gt; model,
+but I didn&amp;rsquo;t change that much rather than &lt;code&gt;AbrstractUser&lt;/code&gt; from &lt;code&gt;django.contrib.auth.models&lt;/code&gt;. The
+error was like this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IntegrityError: (1048, &amp;quot;Column &#39;user_id&#39; cannot be null&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I couldn&amp;rsquo;t find the case at all. I asussemed that the error occurs from MySQL, I checked all table
+schema one by one and finally found the reason.&lt;/p&gt;
+
+&lt;p&gt;One of the model includes User &lt;code&gt;ForeignKey&lt;/code&gt; with &lt;code&gt;on_delete=models.SET_DEFAULTS&lt;/code&gt; which is fine
+because when remove the user, it will set the default value, &lt;code&gt;None&lt;/code&gt; in this case. This model is the
+record for the signing policy so it also includes Policy &lt;code&gt;ForeignKey&lt;/code&gt;. Then these fields sets as
+&lt;code&gt;unique_together&lt;/code&gt; that the database create a unique key based on these two fields. When removed
+the user, the field followed &lt;code&gt;on_delete&lt;/code&gt; action and tried to remove &lt;code&gt;user_id&lt;/code&gt;, then the update failed
+because of the &lt;code&gt;unique_together&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;I should be more careful when I use &lt;code&gt;unique_together&lt;/code&gt;, Django is too easy to create this kind of
+relationship on the code, especially. With great power comes great responsibility!&lt;/p&gt;
 </description>
     </item>
     
