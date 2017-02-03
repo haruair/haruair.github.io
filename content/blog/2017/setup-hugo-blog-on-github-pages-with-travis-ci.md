@@ -1,5 +1,5 @@
 +++
-date = "2017-01-02T11:10:12+11:00"
+date = "2017-02-04T11:10:12+11:00"
 title = "Setup Hugo blog on Github Pages with Travis CI"
 
 +++
