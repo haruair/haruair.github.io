@@ -2,12 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog on Eating My Code Everyday</title>
-    <link>https://haruair.github.io/blog/index.xml</link>
+    <link>https://haruair.github.io/blog/</link>
     <description>Recent content in Blog on Eating My Code Everyday</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-AU</language>
     <lastBuildDate>Sat, 04 Feb 2017 11:10:12 +1100</lastBuildDate>
-    <atom:link href="https://haruair.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="https://haruair.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Setup Hugo blog on Github Pages with Travis CI</title>
@@ -15,169 +17,7 @@
       <pubDate>Sat, 04 Feb 2017 11:10:12 +1100</pubDate>
       
       <guid>https://haruair.github.io/post/setup-hugo-blog-on-github-pages-with-travis-ci/</guid>
-      <description>
-
-&lt;p&gt;I don&amp;rsquo;t know much about Go, but I saw so many tweets it&amp;rsquo;s a great language,
-performance wise especially. Hugo is a static blog/site generator written by Go.
-I feel great with Hugo because of the simplicity. The program is provided as a
-single binary file. Other tools require a lot of small settings, installing
-language, setting envrionment, handling a package manager, for example. It still
-requires some config file, but no worries, it&amp;rsquo;s not that big.&lt;/p&gt;
-
-&lt;p&gt;This blog serves on Github Pages. If the blog is using Jekyll, Github is the
-best place to serve the blog because Github provides built-in Jekyll serving as
-a first citizen. Otherwise, Hugo is in the wild. After writing something new,
-it need to render new static pages, then push that files on the repository.
-When you publish every single time by hand, it is a huge chore and I will never
-use it again. In that case, TravisCI is the solution. It&amp;rsquo;s available to use
-it for the rendering after new post pushed.&lt;/p&gt;
-
-&lt;h2 id=&#34;install-hugo-https-gohugo-io-overview-installing&#34;&gt;&lt;a href=&#34;https://gohugo.io/overview/installing/&#34;&gt;Install Hugo&lt;/a&gt;&lt;/h2&gt;
-
-&lt;p&gt;Mac users can install Hugo via &lt;a href=&#34;http://brew.sh/&#34;&gt;Homebrew&lt;/a&gt; easily.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ brew update &amp;amp;&amp;amp; brew install hugo
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The installation is very easy for the most of the platforms. If you are not a
-Mac user, check the &lt;a href=&#34;https://github.com/spf13/hugo/releases&#34;&gt;Releases page&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;basic-usage&#34;&gt;Basic Usage&lt;/h2&gt;
-
-&lt;p&gt;The excerpt of &lt;a href=&#34;https://gohugo.io/overview/quickstart/&#34;&gt;Quickstart&lt;/a&gt; document is
-the below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ hugo new site haruair
-$ hugo new post/hello-world.md
-$ hugo
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can find the result under the &lt;code&gt;public&lt;/code&gt; directory after &lt;code&gt;hugo&lt;/code&gt; run.&lt;/p&gt;
-
-&lt;p&gt;Hugo provides simple webserver for the local. &lt;code&gt;--watch&lt;/code&gt; flag is useful for the
-editing that the page will refresh every save moment. Also, it&amp;rsquo;s avilable to
-build within drafts using &lt;code&gt;--buildDrafts&lt;/code&gt; or &lt;code&gt;-D&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ hugo server --watch --buildDrafts
-$ hugo server -w -D # same as the above
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;initialize-a-git-repository&#34;&gt;Initialize a git repository&lt;/h2&gt;
-
-&lt;p&gt;The strength of static blog is that it don&amp;rsquo;t need any program specific
-environment. There are several options, Amazon S3, Dropbox, etc. Even it&amp;rsquo;s
-possible to use some abandoned old geocity-ish service. Github provides Github
-Pages for this case and it&amp;rsquo;s free to use.&lt;/p&gt;
-
-&lt;p&gt;Create a &lt;a href=&#34;https://github.com&#34;&gt;Github&lt;/a&gt; account if you don&amp;rsquo;t have one. Then,
-Create a repository using &lt;code&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt; as a name.&lt;/p&gt;
-
-&lt;p&gt;Go to the your hugo directory, and make it as a git repository, then push
-it to Github.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ git init
-$ git checkout -b code
-$ echo &#39;/public/&#39; &amp;gt;&amp;gt; .gitignore
-$ git add .
-$ git commit -m &amp;quot;Initial my blog&amp;quot;
-$ git remote add origin haruair.github.io
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I used &lt;code&gt;code&lt;/code&gt; branch for the original source, the static file in &lt;code&gt;public&lt;/code&gt;
-directory will goes into the &lt;code&gt;master&lt;/code&gt; branch as an orphan branch.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ hugo
-$ export HUGO_TEMP_DIR=$(mktemp -d)
-$ cp public/* $HUGO_TEMP_DIR
-$ git checkout --orphan master
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;add-a-deploy-script&#34;&gt;Add a deploy script&lt;/h2&gt;
-
-&lt;p&gt;If you build the site manually, it&amp;rsquo;s just boring. Travis CI allows us to add a
-deploy script after build the static pages. I found
-&lt;a href=&#34;https://github.com/rcoedo/rcoedo.github.io/blob/source/scripts/deploy.sh&#34;&gt;the script&lt;/a&gt;
-from &lt;a href=&#34;http://rcoedo.com/post/hugo-static-site-generator/&#34;&gt;rcoedo.com&lt;/a&gt;, I just
-put my script below, just in case.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir scripts &amp;amp;&amp;amp; cd scripts
-$ wget https://raw.githubusercontent.com/haruair/haruair.github.io/code/scripts/deploy.sh
-$ git add deploy.sh &amp;amp;&amp;amp; git commit -m &amp;quot;Add deploy script&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;create-a-travis-yml-file&#34;&gt;Create a &lt;code&gt;.travis.yml&lt;/code&gt; file&lt;/h2&gt;
-
-&lt;p&gt;I do love pre-config file. The config is
-&lt;a href=&#34;https://github.com/haruair/haruair.github.io/blob/code/.travis.yml&#34;&gt;here&lt;/a&gt;.
-This config need to update as own details.&lt;/p&gt;
-
-&lt;p&gt;The important part is &lt;code&gt;before_install&lt;/code&gt; part. Delete this section from the yml
-file, then add it back with your ssh key. Yes, your ssh key!&lt;/p&gt;
-
-&lt;p&gt;Before add the key into the repository, it will encrypt using &lt;code&gt;travis&lt;/code&gt;. Please
-be aware, do not add the original private key into the repository.&lt;/p&gt;
-
-&lt;h3 id=&#34;install-travis&#34;&gt;Install &lt;code&gt;travis&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;Travis CI provides a CIL tool for the work. Let&amp;rsquo;s install this tool, first.
-It&amp;rsquo;s using Ruby, therefore, you can install it via gem.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ gem install travis --no-rdoc -no-ri
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you don&amp;rsquo;t have Ruby on your machine, please check
-&lt;a href=&#34;https://github.com/travis-ci/travis.rb#updating-your-ruby&#34;&gt;the document from Travis CI&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;create-a-new-ssh-key-and-encrypt-it&#34;&gt;Create a new ssh key and encrypt it&lt;/h3&gt;
-
-&lt;p&gt;It&amp;rsquo;s available to use an existing key, however, creating new one for Travis CI
-is good for the security. Make sure that &lt;code&gt;ssh-keygen&lt;/code&gt; can be overriding a
-default key &lt;code&gt;id_rsa&lt;/code&gt;, be careful before type the enter.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ssh-keygen
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I created the ssh key named &lt;code&gt;travis_key&lt;/code&gt;. The result of this commend is the
-pair of the key: &lt;code&gt;travis_key&lt;/code&gt; and &lt;code&gt;travis_key.pub&lt;/code&gt;. The first one is a private
-key, the other file is a public one.&lt;/p&gt;
-
-&lt;p&gt;Now, we can add &lt;code&gt;travis_key&lt;/code&gt; into Travis using the commend below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ travis encrypt-file travis_key
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you are not logged in Travis before, you may need to run &lt;code&gt;travis login&lt;/code&gt;
-first.&lt;/p&gt;
-
-&lt;p&gt;After then, travis add encrypt file and set the environment variable for the
-encrypt file. Make sure all files are included in git repository and push it
-to Github. Also, do not commit the &amp;ldquo;unencrypt key&amp;rdquo; into your repository.&lt;/p&gt;
-
-&lt;h3 id=&#34;register-the-new-key-in-github&#34;&gt;Register the new key in Github&lt;/h3&gt;
-
-&lt;p&gt;In Github setting page, go to the ssh section and add &lt;code&gt;travis_key.pub&lt;/code&gt; for the
-deploy. &lt;a href=&#34;https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/&#34;&gt;More informations here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;enable-a-repository-on-travis-ci&#34;&gt;Enable a repository on Travis CI&lt;/h3&gt;
-
-&lt;p&gt;Go to &lt;a href=&#34;https://travis-ci.org/profile&#34;&gt;the profile page of Travis CI&lt;/a&gt;, Find out
-the repository, then turn on the switch. It will do the build and will push back
-to Github &lt;code&gt;master&lt;/code&gt; branch.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;All done. Just add new post using Hugo, push to Github, Travis will handle all
-build problem.&lt;/p&gt;
-
-&lt;p&gt;The quickest and the easiest way is here. Clone my repository
-&lt;a href=&#34;http://github.com/haruair/haruair.github.io&#34;&gt;haruair.github.io&lt;/a&gt;, clean up
-all details and configurations, and use it. Please make sure that the credential
-is correct.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s a quite long description than I thought. Tools support the writing, however,
-the key of writing is based on all own ideas. Keep sharpening your idea using
-awesome writing tool Hugo.&lt;/p&gt;
-</description>
+      <description>I don&amp;rsquo;t know much about Go, but I saw so many tweets it&amp;rsquo;s a great language, performance wise especially. Hugo is a static blog/site generator written by Go. I feel great with Hugo because of the simplicity. The program is provided as a single binary file. Other tools require a lot of small settings, installing language, setting envrionment, handling a package manager, for example. It still requires some config file, but no worries, it&amp;rsquo;s not that big.</description>
     </item>
     
     <item>
@@ -186,80 +26,8 @@ awesome writing tool Hugo.&lt;/p&gt;
       <pubDate>Tue, 31 Jan 2017 15:11:45 +1100</pubDate>
       
       <guid>https://haruair.github.io/post/add-keyboard-shortcut-for-disabling-trackpad-in-lubuntu/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve sold Dell XPS 13 because of a keyboard, I&amp;rsquo;m back to Dell Inspiron 11 3000.
-I bought this marchine 8 months ago, Windows 10 was a bit heavy on this laptop.
-So I replaced OS as Lubuntu. The laptop is low spec but it&amp;rsquo;s not bad for the
-normal terminal work.&lt;/p&gt;
-
-&lt;p&gt;Only thing I hate is that this laptop doesn&amp;rsquo;t have a palm rejection. The touch
-pad is almost unusable, I think they forgot someone actually can use it as a
-pointing device. So I instantly searched how to disable the touchpad when I
-want. I found &lt;a href=&#34;http://askubuntu.com/a/160549&#34;&gt;this solution&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;I can see the device on &lt;code&gt;xinput&lt;/code&gt;, but I cannot temporary disabled the touch pad
-using this script. It turns out, the other weird looking name one is actual
-touch pad. It shows up &lt;code&gt;DLL0725:01 06CB:7D47&lt;/code&gt; for me.&lt;/p&gt;
-
-&lt;p&gt;Also, &lt;code&gt;xinput disable &amp;lt;id&amp;gt;&lt;/code&gt; makes something weird. When I use this shell script,
-the cursor is disappeared. So I changed the script like below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!/bin/bash
-# toggle state of synaptics touchpad
-
-# changed SynPS to DLL because of the name
-tpid=`xinput list | grep DLL | sed &#39;s/.*id\=\([0-9]\+\).*/\1/g&#39;`
-
-# find out Device Enabled prop from the device
-prop=`xinput list-props ${tpid} | grep Device\ Enabled`
-propid=`echo ${prop} | sed -e &amp;quot;s/.*(\([0-9]\+\).*/\1/g&amp;quot;`
-status=`echo ${prop} | sed -e &amp;quot;s/.*\:[ \t]\+//g&amp;quot;`
-
-
-if [ 0 -eq ${status} ] ; then
-    xinput set-prop ${tpid} ${propid} 1
-else
-    xinput set-prop ${tpid} ${propid} 0
-fi
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I saved this file as &lt;code&gt;toggle-touchpad.sh&lt;/code&gt; at user directory and changed the file
-permission. I&amp;rsquo;m not sure the script is good enough so if you think this script
-can be upgraded, please leave a PR to the article.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;chmod +x toggle-touchpad.sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;My first thought is that this shell file should excute when Vim change to Insert
-mode. So I added &lt;code&gt;autocmd&lt;/code&gt; config into the vim config file.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-vimrc&#34;&gt;autocmd InsertEnter * silent! execute &amp;quot;!~/toggle-touchpad.sh &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&amp;quot; | redraw!
-autocmd InsertLeave * silent! execute &amp;quot;!~/toggle-touchpad.sh &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&amp;quot; | redraw!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This event triggered when Vim change to Insert mode. I realised that the insert
-mode is the good solution because I couldn&amp;rsquo;t use my mouse when I did Alt-Tab
-action during the edit. Therefore, I added another hotkey for this script. I
-updated this code into &lt;code&gt;openbox_config &amp;gt; Keyboard&lt;/code&gt; in
-&lt;code&gt;~/.config/openbox/lubuntu-rc.xml&lt;/code&gt; file. You can change if you want to use other
-keybind.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-xml&#34;&gt;&amp;lt;keybind key=&amp;quot;W-l&amp;quot;&amp;gt;
-    &amp;lt;action name=&amp;quot;Execute&amp;quot;&amp;gt;
-        &amp;lt;command&amp;gt;~/toggle-touchpad.sh&amp;lt;/command&amp;gt;
-    &amp;lt;/action&amp;gt;
-&amp;lt;/keybind&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Then refresh Openbox for the updating.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;openbox --reconfigure
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, &lt;kbd&gt;Win+L&lt;/kbd&gt; will be the key just like a touchpad on/off switch.&lt;/p&gt;
-
-&lt;p&gt;This is not a good solution. There are so many options for this type of
-configuration, You can achieve same thing in other ways.&lt;/p&gt;
-</description>
+      <description>I&amp;rsquo;ve sold Dell XPS 13 because of a keyboard, I&amp;rsquo;m back to Dell Inspiron 11 3000. I bought this marchine 8 months ago, Windows 10 was a bit heavy on this laptop. So I replaced OS as Lubuntu. The laptop is low spec but it&amp;rsquo;s not bad for the normal terminal work.
+Only thing I hate is that this laptop doesn&amp;rsquo;t have a palm rejection. The touch pad is almost unusable, I think they forgot someone actually can use it as a pointing device.</description>
     </item>
     
     <item>
@@ -268,26 +36,9 @@ configuration, You can achieve same thing in other ways.&lt;/p&gt;
       <pubDate>Tue, 24 Jan 2017 19:11:45 +1100</pubDate>
       
       <guid>https://haruair.github.io/post/column-user_id-cannot-be-null-on-django-admin/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;ve got an IntegrityError when I remove the user from django-admin. I uses custom &lt;code&gt;User&lt;/code&gt; model,
-but I didn&amp;rsquo;t change that much rather than &lt;code&gt;AbrstractUser&lt;/code&gt; from &lt;code&gt;django.contrib.auth.models&lt;/code&gt;. The
-error was like this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;IntegrityError: (1048, &amp;quot;Column &#39;user_id&#39; cannot be null&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I couldn&amp;rsquo;t find the case at all. I asussemed that the error occurs from MySQL, I checked all table
-schema one by one and finally found the reason.&lt;/p&gt;
-
-&lt;p&gt;One of the model includes User &lt;code&gt;ForeignKey&lt;/code&gt; with &lt;code&gt;on_delete=models.SET_DEFAULTS&lt;/code&gt; which is fine
-because when remove the user, it will set the default value, &lt;code&gt;None&lt;/code&gt; in this case. This model is the
-record for the signing policy so it also includes Policy &lt;code&gt;ForeignKey&lt;/code&gt;. Then these fields sets as
-&lt;code&gt;unique_together&lt;/code&gt; that the database create a unique key based on these two fields. When removed
-the user, the field followed &lt;code&gt;on_delete&lt;/code&gt; action and tried to remove &lt;code&gt;user_id&lt;/code&gt;, then the update failed
-because of the &lt;code&gt;unique_together&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;I should be more careful when I use &lt;code&gt;unique_together&lt;/code&gt;, Django is too easy to create this kind of
-relationship on the code, especially. With great power comes great responsibility!&lt;/p&gt;
-</description>
+      <description>I&amp;rsquo;ve got an IntegrityError when I remove the user from django-admin. I uses custom User model, but I didn&amp;rsquo;t change that much rather than AbrstractUser from django.contrib.auth.models. The error was like this:
+IntegrityError: (1048, &amp;quot;Column &#39;user_id&#39; cannot be null&amp;quot;)  I couldn&amp;rsquo;t find the case at all. I asussemed that the error occurs from MySQL, I checked all table schema one by one and finally found the reason.
+One of the model includes User ForeignKey with on_delete=models.</description>
     </item>
     
     <item>
@@ -296,36 +47,8 @@ relationship on the code, especially. With great power comes great responsibilit
       <pubDate>Mon, 02 Jan 2017 04:11:00 +1100</pubDate>
       
       <guid>https://haruair.github.io/post/new-years-resolution/</guid>
-      <description>&lt;p&gt;I&amp;rsquo;d love to make a list. New year&amp;rsquo;s resolution is one of the things, I almost
-forget about it at the end of the year, though. I want to list some ideas for
-2017:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Keep writing a blog as much as I did last year. But the difference is that the
-posts will be written by English.&lt;/li&gt;
-&lt;li&gt;Read more. When I read something, it still very slow. Probably I will grab
-Kindle again, want to spend more time with the text.&lt;/li&gt;
-&lt;li&gt;Do coding. I didn&amp;rsquo;t do anything with open source in last year because of the
-translation. I want to make something.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;This list is the three big things in this year. Will see what I can achieve at
-the end.&lt;/p&gt;
-
-&lt;p&gt;Also, I want to mention here something, I didn&amp;rsquo;t speak in public just yet. I got
-an opportunity from somewhere else. The position is a quite different rather
-than the current one. I need to digest new environments and also tech stacks.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s almost 5 years since I moved in Melbourne. I always said that English is
-the important if someone want to live here, but I didn&amp;rsquo;t do any effort
-during this period. I did some preparation for IELTS once, that study was not
-intence at all because the goal was quite low points. In this time, I want to
-study intensively. My expectation of this year is studying like a
-&lt;a href=&#34;https://koreanteenlife.wordpress.com/2015/01/22/gosam/&#34;&gt;gosam&lt;/a&gt; does.&lt;/p&gt;
-
-&lt;p&gt;Practice makes perfect. Everyone knows that, most of people doesn&amp;rsquo;t do that.
-I will make it for the perfection with this resolution in this year.&lt;/p&gt;
-</description>
+      <description>I&amp;rsquo;d love to make a list. New year&amp;rsquo;s resolution is one of the things, I almost forget about it at the end of the year, though. I want to list some ideas for 2017:
+ Keep writing a blog as much as I did last year. But the difference is that the posts will be written by English. Read more. When I read something, it still very slow. Probably I will grab Kindle again, want to spend more time with the text.</description>
     </item>
     
   </channel>
